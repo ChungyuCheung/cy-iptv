@@ -13,13 +13,11 @@ on:
         required: true
         default: 'master'
   
-  # 每6小时自动运行一次
-  schedule:
-    - cron: '0 */6 * * *'
-
-  # 当仓库有push时也运行
-  push:
-    branches: [ master ]
+  # 已停用自动同步（用户独立维护）：
+  # schedule:
+  #   - cron: '0 */6 * * *'
+  # push:
+  #   branches: [ master ]
 
 jobs:
   sync:
@@ -78,9 +76,18 @@ jobs:
         # 切换到目标分支
         git checkout $CURRENT_BRANCH
         
-        # 备份当前的工作流文件
+        # 备份当前的工作流文件与自定义源相关文件
         if [ -d ".github/workflows" ]; then
           cp -r .github/workflows .github/workflows.backup
+        fi
+        if [ -f "tv/custom.txt" ]; then
+          cp tv/custom.txt tv/custom.txt.backup
+        fi
+        if [ -f "tv/favorites.txt" ]; then
+          cp tv/favorites.txt tv/favorites.txt.backup
+        fi
+        if [ -f "tools/merge_custom.py" ]; then
+          cp tools/merge_custom.py tools/merge_custom.py.backup
         fi
         
         # 强制同步：以远程仓库为准
@@ -102,6 +109,28 @@ jobs:
           rm -rf .github/workflows
           mv .github/workflows.backup .github/workflows
           git add .github/workflows/
+        fi
+
+        # 恢复自定义源文件和合并脚本
+        if [ -f "tv/custom.txt.backup" ]; then
+          mv tv/custom.txt.backup tv/custom.txt
+        fi
+        if [ -f "tv/favorites.txt.backup" ]; then
+          mv tv/favorites.txt.backup tv/favorites.txt
+        fi
+        if [ -f "tools/merge_custom.py.backup" ]; then
+          mv tools/merge_custom.py.backup tools/merge_custom.py
+        fi
+
+        # 重新合并自定义频道（翡翠台等）到 iptv4.txt 与 iptv4.m3u
+        if [ -f "tools/merge_custom.py" ]; then
+          python3 tools/merge_custom.py || python tools/merge_custom.py || true
+          git add tv/ tools/
+        fi
+
+        # 检查是否有文件改动需要提交
+        if ! git diff --quiet HEAD || ! git diff --staged --quiet; then
+          git commit -m "chore: 自动同步上游更新并保留自定义播放源（翡翠台等）" || true
         fi
         
         # 强制推送更改（覆盖任何本地修改）

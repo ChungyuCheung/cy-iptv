@@ -33,6 +33,39 @@ permalink: /
 
 
 
+<h2>⭐ 精选专区订阅源（港台/体育精简版）</h2>
+
+<p>精选高质量源，包含 <strong>CCTV5、CCTV5+、翡翠台（1080P/4K）、无线新闻台、广东体育、台湾主流台（TVBS/台视/三立/八大等）</strong>，纯净无冗余。</p>
+
+<table>
+  <colgroup>
+    <col style="width: 25%;">
+    <col style="width: 55%;">
+    <col style="width: 20%;">
+  </colgroup>
+  <tr>
+    <th>名称</th>
+    <th>网址</th>
+    <th>快速复制</th>
+  </tr>
+  <tr>
+    <td>精选 M3U 源（带台标/EPG）</td>
+    <td><a href="tv/favorites.m3u">tv/favorites.m3u</a></td>
+    <td><button class="button" onclick="copyToClipboard(window.location.origin + '/tv/favorites.m3u')">快速复制</button></td>
+  </tr>
+  <tr>
+    <td>精选 TXT 直播源</td>
+    <td><a href="tv/favorites.txt">tv/favorites.txt</a></td>
+    <td><button class="button" onclick="copyToClipboard(window.location.origin + '/tv/favorites.txt')">快速复制</button></td>
+  </tr>
+</table>
+
+```
+https://raw.githubusercontent.com/ChungyuCheung/iptv/master/tv/favorites.m3u
+```
+
+------
+
 <h2>📡 自动扫描直播源 IPTV4</h2>
 
 <p><strong>IPTV4直播源</strong>由部署在服务器上的程序自动扫描验证，确保<strong>直播源</strong>的时效性和稳定性。</p>
