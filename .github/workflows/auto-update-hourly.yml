@@ -2,9 +2,9 @@ name: 每小时自动测活并更新直播源
 
 on:
   schedule:
-    # 国际标准时间每小时第 0 分钟触发（对应北京时间每小时整点）
+    # 国际标准时间每小时第 0 分钟运行一次（对应北京时间每小时整点）
     - cron: '0 * * * *'
-  workflow_dispatch: # 支持在 GitHub 仓库 Actions 页面手动点击触发
+  workflow_dispatch: # 支持在 GitHub 网页端的 Actions 页面随时手动一键触发
 
 jobs:
   check-and-update:
@@ -13,7 +13,7 @@ jobs:
       contents: write
 
     steps:
-    - name: 检出当前仓库代码
+    - name: 检出仓库代码
       uses: actions/checkout@v4
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
@@ -24,21 +24,22 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: 执行直播源测活与自动重构
+    - name: 执行直播源测活、测速排序与重构
       run: |
         python tools/auto_update.py
 
-    - name: 提交并推送到仓库
+    - name: 提交并同步推送到 main 与 master 分支
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
         
-        # 检查是否有文件更新
+        # 检查是否有文件更新或时间戳更新
         if [ -n "$(git status --porcelain)" ]; then
           git add tv/
-          git commit -m "chore(auto): 每小时自动巡检查活并更新有效直播源 [skip ci]"
-          git push origin master
-          echo "✅ 检测到播放源变动，已自动推送到 master 分支"
+          git commit -m "chore(auto): 每小时自动巡检查活并更新直播源 [skip ci]"
+          git push origin HEAD:main
+          git push origin HEAD:master || true
+          echo "✅ 播放源已自动更新并推送到远程分支"
         else
-          echo "ℹ️ 所有播放源状态良好，无需更新提交"
+          echo "ℹ️ 所有播放源均正常，无需提交"
         fi
