@@ -24,7 +24,10 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: 执行直播源测活、测速排序与重构
+    - name: 执行直播源测活、测速排序与通知推送
+      env:
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       run: |
         python tools/auto_update.py
 

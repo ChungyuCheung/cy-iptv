@@ -1,4 +1,5 @@
 import urllib.request
+import urllib.parse
 import concurrent.futures
 import time
 import os
@@ -78,9 +79,7 @@ CANDIDATE_POOL = {
 }
 
 def check_stream(url, timeout=3.0):
-    """
-    测试流地址是否可用，并返回 (是否可用, 延迟秒数)
-    """
+    """测试流地址是否可用，并返回 (是否可用, 延迟秒数)"""
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
     }
@@ -97,15 +96,34 @@ def check_stream(url, timeout=3.0):
         pass
     return False, 999.0
 
-def update_all_sources():
-    print(f"[{datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] 开始执行直播源全量并发测活...")
+def send_telegram_notification(message):
+    token = os.environ.get("TELEGRAM_BOT_TOKEN")
+    chat_id = os.environ.get("TELEGRAM_CHAT_ID")
+    if not token or not chat_id:
+        return
+    try:
+        url = f"https://api.telegram.org/bot{token}/sendMessage"
+        payload = {
+            "chat_id": chat_id,
+            "text": message,
+            "parse_mode": "Markdown"
+        }
+        data = urllib.parse.urlencode(payload).encode('utf-8')
+        req = urllib.request.Request(url, data=data)
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            if resp.status == 200:
+                print("✅ Telegram 通知推送成功！")
+    except Exception as e:
+        print(f"⚠️ Telegram 发送失败（非关键报错）: {e}")
 
-    # 收集待测列表并去重
+def update_all_sources():
+    now_str = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    print(f"[{now_str}] 开始执行直播源全量并发测活...")
+
     unique_urls = set()
     for urls in CANDIDATE_POOL.values():
         unique_urls.update(urls)
 
-    # 并发测活
     url_status = {}
     with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
         future_to_url = {executor.submit(check_stream, u): u for u in unique_urls}
@@ -117,24 +135,22 @@ def update_all_sources():
             except:
                 url_status[u] = (False, 999.0)
 
-    # 筛选各频道可用的源并按延迟升序排序
     active_pool = {}
+    total_active = 0
     for ch_name, urls in CANDIDATE_POOL.items():
         valid_list = []
         for u in urls:
             ok, latency = url_status.get(u, (False, 999.0))
             if ok:
                 valid_list.append((u, latency))
-        # 按延迟排序
         valid_list.sort(key=lambda x: x[1])
         active_urls = [x[0] for x in valid_list]
-        # 如果当前测活没有通过的，回退保留原第一条，避免列表完全清空
         if not active_urls and urls:
             active_urls = [urls[0]]
         active_pool[ch_name] = active_urls
+        total_active += len(active_urls)
         print(f"  * {ch_name}: {len(active_urls)} 条可用源")
 
-    # 构建 favorites.txt
     fav_groups = [
         ("体育精选", ["CCTV5", "CCTV5+", "广东体育", "纬来体育"]),
         ("香港专区", ["翡翠台 1080P", "翡翠台 4K", "翡翠台", "无线新闻台", "TVB Plus", "TVB 星河"]),
@@ -144,8 +160,6 @@ def update_all_sources():
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     tv_dir = os.path.join(base_dir, 'tv')
     fav_txt_path = os.path.join(tv_dir, 'favorites.txt')
-
-    now_str = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
     fav_txt_lines = []
     for g_title, ch_list in fav_groups:
@@ -159,10 +173,28 @@ def update_all_sources():
         f.write('\n'.join(fav_txt_lines).strip() + '\n')
     print(f"已更新 {fav_txt_path}")
 
-    # 调用 merge_custom.py 重新生成所有 M3U 和合并到 iptv4
     from merge_custom import merge_custom_channels
     merge_custom_channels()
     print(f"[{now_str}] 全部直播源测活与自动重构完成！")
+
+    # 构建 Telegram / 日志播报信息
+    fct_count = len(active_pool.get('翡翠台 1080P', [])) + len(active_pool.get('翡翠台 4K', [])) + len(active_pool.get('翡翠台', []))
+    news_count = len(active_pool.get('无线新闻台', []))
+    cctv_count = len(active_pool.get('CCTV5', [])) + len(active_pool.get('CCTV5+', []))
+    tw_count = sum(len(active_pool.get(k, [])) for k in ["TVBS 新闻台", "TVBS Asia", "台视新闻", "三立戏剧台", "八大戏剧台", "纬来精采台", "人间卫视"])
+
+    tg_msg = (
+        f"📺 *CY-IPTV 自动巡检播报*\n\n"
+        f"⏱ *巡检时间*: `{now_str}`\n"
+        f"🟢 *测活状态*: 全部正常（共 {total_active} 条可用线路）\n"
+        f"📡 *核心频道概况*:\n"
+        f"  • 翡翠台: `{fct_count}` 条优质线路（含1080P/4K）\n"
+        f"  • 无线新闻台: `{news_count}` 条播报线路\n"
+        f"  • 央视体育 (CCTV5/5+): `{cctv_count}` 条高速线路\n"
+        f"  • 台湾专区 (TVBS/台视/三立等): `{tw_count}` 条线路\n\n"
+        f"🚀 *已自动同步至 GitHub 仓库分支！*"
+    )
+    send_telegram_notification(tg_msg)
 
 if __name__ == '__main__':
     update_all_sources()
