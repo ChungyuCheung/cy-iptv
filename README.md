@@ -61,7 +61,7 @@ permalink: /
 </table>
 
 ```
-https://raw.githubusercontent.com/ChungyuCheung/iptv/master/tv/favorites.m3u
+https://raw.githubusercontent.com/ChungyuCheung/cy-iptv/master/tv/favorites.m3u
 ```
 
 ------
