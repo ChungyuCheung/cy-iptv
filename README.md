@@ -1,249 +1,90 @@
----
-layout: default
-title: 最新IPTV直播源|每日更新直播源|免费电视直播源|Github开源项目
-description: 本项目免费提供最新开源的IPTV直播源,每6小时自动更新。收录国内外数千个高清直播频道源,包括央视、卫视等频道。完全免费无广告,提供M3U/TXT格式,支持IPv4/IPv6双栈访问,支持EPG节目单及台标,可用于所有苹果、安卓4.0+系统的电视盒子、手机、和任何电脑等设备。
-keywords: IPTV,直播源,IPTV直播源,直播电视,电视直播,CCTV,全套卫视,全套央视,iptv,iptv直播源,ipv4直播源,IPv6直播源,免费直播源,m3u8直播源,国内,直播电视app
-permalink: /
----
-
-
-<h2 align="center">✯ 这是一个国内可直连的iptv直播源分享项目 ✯</h2>
-
-<h2>🔄永久免费 完全开源 不含广告 直播源支持IPv4/IPv6双栈访问🔄</h2>
-
-<span style="color: #e03e2d;"><strong>请注意：</strong></span>本仓库直播源全部来源：由github仓库工作流自动收集于网络公开资源。本项目不存储任何直播源媒体的内容，所有直播源均由第三方提供，本项目不对其内容负责，不保证直播源的可用性、稳定性和合法性。
-
-<div class="badges-container">
-    <img src="https://img.shields.io/github/stars/vbskycn/iptv?style=flat-square" alt="GitHub stars" />
-    <img src="https://img.shields.io/github/forks/vbskycn/iptv?style=flat-square" alt="GitHub forks" />
-    <img src="https://img.shields.io/github/issues/vbskycn/iptv?style=flat-square" alt="GitHub issues" />
-    <img src="https://img.shields.io/github/watchers/vbskycn/iptv?style=flat-square" alt="GitHub watchers" />
-    <img src="https://img.shields.io/github/contributors/vbskycn/iptv?style=flat-square" alt="GitHub contributors" />
-    <img src="https://img.shields.io/github/license/vbskycn/iptv?style=flat-square" alt="GitHub license" />
-    <img src="https://views.whatilearened.today/views/github/vbskycn/iptv.svg" alt="访问统计" />
-</div>
-------
-
-如不愿折腾开源项目，推荐直接下载第三方开发的软件 **直播电视** APP 使用，手机电视盒子都兼容，免费无广告。
-
-直播电视APP 下载地址：[https://izbds.com/aztv/](https://izbds.com/aztv/)    
-
-------
-
-
-
-
-<h2>⭐ 精选专区订阅源（港台/体育精简版）</h2>
-
-<p>精选高质量源，包含 <strong>CCTV5、CCTV5+、翡翠台（1080P/4K）、无线新闻台、广东体育、台湾主流台（TVBS/台视/三立/八大等）</strong>，纯净无冗余。</p>
-
-<table>
-  <colgroup>
-    <col style="width: 25%;">
-    <col style="width: 55%;">
-    <col style="width: 20%;">
-  </colgroup>
-  <tr>
-    <th>名称</th>
-    <th>网址</th>
-    <th>快速复制</th>
-  </tr>
-  <tr>
-    <td>精选 M3U 源（带台标/EPG）</td>
-    <td><a href="tv/favorites.m3u">tv/favorites.m3u</a></td>
-    <td><button class="button" onclick="copyToClipboard(window.location.origin + '/tv/favorites.m3u')">快速复制</button></td>
-  </tr>
-  <tr>
-    <td>精选 TXT 直播源</td>
-    <td><a href="tv/favorites.txt">tv/favorites.txt</a></td>
-    <td><button class="button" onclick="copyToClipboard(window.location.origin + '/tv/favorites.txt')">快速复制</button></td>
-  </tr>
-</table>
-
-```
-https://raw.githubusercontent.com/ChungyuCheung/cy-iptv/master/tv/favorites.m3u
-```
-
-------
-
-<h2>📡 自动扫描直播源 IPTV4</h2>
-
-<p><strong>IPTV4直播源</strong>由部署在服务器上的程序自动扫描验证，确保<strong>直播源</strong>的时效性和稳定性。</p>
-
-<!-- UPDATE_TIME_IPTV4 -->本次更新时间: 2026-09-18 12:23:25<!-- END_UPDATE_TIME_IPTV4 -->
-
-<table>
-  <colgroup>
-    <col style="width: 20%;">
-    <col style="width: 60%;">
-    <col style="width: 20%;">
-  </colgroup>
-  <tr>
-    <th>名称</th>
-    <th>网址</th>
-    <th>快速复制</th>
-  </tr>
-  <tr>
-    <td>TXT 格式直播源</td>
-    <td><a href="https://live.zbds.top/tv/iptv4.txt">https://live.zbds.top/tv/iptv4.txt</a></td>
-    <td><button class="button" onclick="copyToClipboard('https://live.zbds.top/tv/iptv4.txt')">快速复制</button></td>
-  </tr>
-  <tr>
-    <td>M3U 格式直播源（已带台标和EPG）</td>
-    <td><a href="https://live.zbds.top/tv/iptv4.m3u">https://live.zbds.top/tv/iptv4.m3u</a></td>
-    <td><button class="button" onclick="copyToClipboard('https://live.zbds.top/tv/iptv4.m3u')">快速复制</button></td>
-  </tr>
-</table>
-*如果你打不开github域名，请使用加速地址访问，加速地址也失效了？那就在找一个*
-
-```
-https://gh-proxy.com/raw.githubusercontent.com/vbskycn/iptv/refs/heads/master/tv/iptv4.txt
-```
-
-```
-https://gh-proxy.com/raw.githubusercontent.com/vbskycn/iptv/refs/heads/master/tv/iptv4.m3u
-```
-
-
-
-
-<h2>📡 自动扫描直播源 IPTV6</h2>
-
-<p><strong>IPTV6直播源</strong>专为IPv6网络优化，由部署在服务器上的程序自动扫描验证，确保<strong>直播源</strong>的时效和稳定</p>
-
-<!-- UPDATE_TIME_IPTV6 -->本次更新时间: 2026-09-18 12:23:25<!-- END_UPDATE_TIME_IPTV6 -->
-
-**近期由于不可力抗原因，大部分ipv6源都关门了，大玩家各玩各的。造成网友们不能一网通吃，请大家静待花开吧！！如有开门的大玩家，本仓库第一时间更新上来给大家分享**
-
-<table>
-  <colgroup>
-    <col style="width: 20%;">
-    <col style="width: 60%;">
-    <col style="width: 20%;">
-  </colgroup>
-  <tr>
-    <th>名称</th>
-    <th>网址</th>
-    <th>快速复制</th>
-  </tr>
-  <tr>
-    <td>TXT 格式直播源</td>
-    <td><a href="https://live.zbds.top/tv/iptv6.txt">https://live.zbds.top/tv/iptv6.txt</a></td>
-    <td><button class="button" onclick="copyToClipboard('https://live.zbds.top/tv/iptv6.txt')">快速复制</button></td>
-  </tr>
-  <tr>
-    <td>M3U 格式直播源（已带台标和EPG）</td>
-    <td><a href="https://live.zbds.top/tv/iptv6.m3u">https://live.zbds.top/tv/iptv6.m3u</a></td>
-    <td><button class="button" onclick="copyToClipboard('https://live.zbds.top/tv/iptv6.m3u')">快速复制</button></td>
-  </tr>
-</table>
-
-*有地方的宽带运营商已经污染本项目域名了，如果你打开失败，请使用加速地址访问*
-
-```
-https://gh-proxy.com/raw.githubusercontent.com/vbskycn/iptv/refs/heads/master/tv/iptv6.txt
-```
-
-```
-https://gh-proxy.com/raw.githubusercontent.com/vbskycn/iptv/refs/heads/master/tv/iptv6.m3u
-```
-
-
-
-
-
-<h2>💽DEMO</h2>
-
-<p><img src="assets/demo.webp" alt="IPTV直播源演示截图 - 展示直播源列表和播放界面" title="IPTV直播源演示" loading="lazy" decoding="async" /></p>
-
-
-
-<h2>🛠️工具</h2>
-
-<p>我们提供多种<strong>直播源</strong>相关工具，帮助您更好地使用<strong>IPTV直播源</strong>：</p>
-
-
-
-### 直播源开源站点地址
-
-- [https://live.zbds.top/](https://live.zbds.top/)
-
-
-
-### 🔄 Fork 仓库自动同步
-
-如果您 Fork 了本项目，可以通过以下方式保持与上游仓库的同步：
-
-#### 开启 GitHub Actions 工作流
-**重要**：Fork 后需要手动开启 Actions 功能才能使用自动同步：
-
-1. 进入您 Fork 的仓库页面
-2. 点击仓库顶部的 **"Actions"** 标签页
-3. 如果看到 "Workflows aren't being run on this forked repository" 的提示，点击 **"I understand my workflows, go ahead and enable them"** 按钮
-4. 在左侧工作流列表中找到 **"Sync with Upstream Repository"** 工作流
-5. 点击该工作流，然后点击 **"Enable workflow"** 按钮
-6. 确认启用工作流
-
-> **说明**：由于 GitHub 安全策略，包含定时任务（schedule）和手动触发（workflow_dispatch）的工作流在 Fork 后默认是关闭的，需要手动启用。
-
-#### 自动同步（推荐）
-开启 Actions 后，本项目已配置 GitHub Actions 工作流，每6小时自动同步上游仓库的更新：
-- ✅ 每6小时自动检测上游仓库更新
-- ✅ 自动合并最新更改，每次同步都会生成详细的执行报告
-- ✅ 自动解决合并冲突（以远程仓库为准）
-- ✅ 保护工作流文件，避免权限问题
-
-
-
-
-
-<h2>📅 更新</h2>
-
-- 2025.9.29 删除一些冗余文件
-- 2025.8.1 更新一些直播源
-- 2025.5.20 不提供epg服务
-- 2025.1.11 优化页面
-- 2024.12.13 跟着节奏继续优化
-- 2024.10.18 优化测试有效源代码
-- 2024.9.9 直播源失效速度太快，新添加deibian服务器，每日三次更新
-- 2024.6.22 新增 IPTV4/IPTV6 自动更新源
-
-
-
-<h2>💬 联系</h2>
-
-<div class="contact-info">
-    <a href="https://t.me/starkluistn98" target="_blank">
-        <img src="https://img.shields.io/badge/Telegram-@starkluistn98-blue?style=flat-square&logo=telegram" alt="Telegram" />
-    </a>
+# 📺 CY-IPTV 极清专属电视直播源
+
+<div align="center">
+  <h3>⚡ 24 小时全自动测活保活 · 极清无损 · 秒开低延时 ⚡</h3>
+  <p>专为个人家庭影音打造的纯净精选 IPTV 直播源服务，支持电视盒子、手机与电脑全平台播放。</p>
 </div>
 
+---
 
-<h2>📝 免责声明</h2>
+## 🌟 产品亮点与特色
 
-- 本项目仅作为技术研究用途，用于学习和交流。所有内容均收集自互联网公开链接，严禁用于任何商业用途，包括但不限于商业直播、商业推广等。
+- 🎯 **精选核心频道**：精简过滤掉海量无意义低质台，专注高频收视频道：
+  - **香港专区**：翡翠台（1080P 高清 / 4K 极清）、无线新闻台、TVB Plus、TVB 星河。
+  - **体育专区**：CCTV-5、CCTV-5+、广东体育、纬来体育，多线路赛事无缝覆盖。
+  - **台湾专区**：TVBS 新闻台、TVBS Asia、台视新闻、三立戏剧台、八大戏剧台、纬来精采台、人间卫视等。
+- ⏰ **每小时全自动智能巡检**：
+  - 由 GitHub Actions 24 小时全自动并发探测所有流媒体切片。
+  - **智能测速与排序**：延迟最低、连通最快的源自动置顶。
+  - **自动剔除死链**：线路故障自动下沉，换台永不卡死。
+- 📱 **多端全适配**：
+  - 完美适配电视端 **TVBox、影视仓、TiviMate**。
+  - 完美适配 iOS/Mac 端 **SenPlayer、APTV**。
+  - 完美适配 PC 端 **PotPlayer、VLC** 及本地 Web 播放器。
+- 🎨 **完整节目单与高清台标**：内置 EPG 电子节目指南与官方高清透明台标，观感媲美高端广电机顶盒。
 
-- 本项目不存储任何的流媒体内容，所有直播源均由第三方提供，本项目不对其内容负责，不保证直播源的可用性、稳定性和合法性，所有的法律责任与后果应由使用者自行承担。
+---
 
-- 本项目采用开源协议发布，您可以 Fork 本项目，但引用本项目内容到其他仓库的情况，务必要遵守开源协议，必须注明来源。
+## 📡 订阅直链指南
 
-- 本项目不保证直播频道的有效性，直播内容可能受直播服务提供商因素影响而失效。
+### 1. 精选核心订阅（推荐 ⭐）
 
-- 本项目由社区维护，所有文件均托管在 [GitHub仓库](https://github.com/vbskycn/iptv) 且自动构建，由项目发起人公益维护，欢迎 Star 本项目或点击 [Issues](https://github.com/vbskycn/iptv/issues/new/choose) 反馈您的问题。
+| 订阅类型 | 链接地址 / 路径 | 适用客户端 |
+| :--- | :--- | :--- |
+| **M3U 订阅（带台标/EPG）** | `tv/favorites.m3u` | TVBox、影视仓、TiviMate、SenPlayer、PotPlayer |
+| **TXT 格式直播源** | `tv/favorites.txt` | 纯直播壳子、部分旧版电视软件 |
 
-- 本项目维护者保留随时修改或终止项目的权利，且最终解释权归项目维护者所有。
+> 💡 **私有仓库订阅方式（免登录）**：
+> 在本仓库中打开 `tv/favorites.m3u`，点击右上角的 **`Raw`** 按钮，复制浏览器地址栏带 `?token=...` 的专属私密链接，粘贴至任意播放器即可无限制使用！
 
-- 使用本项目即表示您已阅读并同意本免责声明，如不同意本声明，请立即停止使用本项目，本项目保留随时更新免责声明的权利
+---
 
-  
+## 📲 多端详细使用教程
 
-<h2>📊 Star History</h2>
+### 1. 小米电视 / 电视盒子（TVBox、影视仓）
+1. 打开电视上的 **TVBox** 或 **影视仓**。
+2. 进入 **设置 -> 配置地址**（或直播设置中的“配置”）。
+3. 电视屏幕会显示一个**二维码**和一个**局域网网址**（如 `http://192.168.1.xxx:9978`）。
+4. 手机或电脑连上家里同一 WiFi，扫码或访问该网址，把 M3U 订阅链接粘贴进去并保存，电视立即同步完成。
+5. **强烈建议设置**：在电视软件设置中将**“超时换源时间”设为 3 秒**，遇线路波动自动秒切下一线路！
 
-<a href="https://www.star-history.com/?repos=vbskycn%2Fiptv&type=date&legend=top-left">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=vbskycn/iptv&type=date&theme=dark&legend=top-left&sealed_token=-qKM5OCW55_PN75-oQV4xJYmS9TT-5LzMUC9oPQ-S3H2fhVPclRQUB8Qy1Y5cLvFj1Z7dsm-n-F6oAo0K5y201-c3ff2s-taFba2h6ZGsaFa8sF9KXg4HQ" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=vbskycn/iptv&type=date&legend=top-left&sealed_token=-qKM5OCW55_PN75-oQV4xJYmS9TT-5LzMUC9oPQ-S3H2fhVPclRQUB8Qy1Y5cLvFj1Z7dsm-n-F6oAo0K5y201-c3ff2s-taFba2h6ZGsaFa8sF9KXg4HQ" />
-   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=vbskycn/iptv&type=date&legend=top-left&sealed_token=-qKM5OCW55_PN75-oQV4xJYmS9TT-5LzMUC9oPQ-S3H2fhVPclRQUB8Qy1Y5cLvFj1Z7dsm-n-F6oAo0K5y201-c3ff2s-taFba2h6ZGsaFa8sF9KXg4HQ" />
- </picture>
-</a>
+---
 
+### 2. 手机端（iOS / Android / SenPlayer）
+1. 打开手机上的 **SenPlayer**。
+2. 点击底部 **“网络”**（或资料库） -> 点击右上角 **`+`** 号 -> 选择 **“IPTV”**。
+3. 填写名称（如：`精选电视`），在 **URL** 输入框中粘贴您的 M3U 订阅链接。
+4. 点击完成，即可享受高清频道分类、小窗画中画及后台播放。
+
+---
+
+### 3. 电脑端（Windows / Mac）
+- **本地网页秒测（免安装）**：双击运行项目内的 [`tools/player.html`](tools/player.html)，内置播放器即开即看。
+- **专业播放器**：鼠标右键项目内的 [`tv/favorites.m3u`](tv/favorites.m3u)，选择用 **PotPlayer** 或 **VLC** 打开即可换台播放。
+
+---
+
+## 🛠️ 项目目录结构
+
+```text
+├── .github/workflows/
+│   ├── auto-update-hourly.yml   # 每小时自动巡检与保活工作流
+│   └── sync-upstream.yml        # 上游同步控制（已停用覆盖）
+├── tools/
+│   ├── auto_update.py           # 核心多源测活、测速排序与更新脚本
+│   ├── merge_custom.py          # 自定义频道生成与合并工具
+│   └── player.html              # 本地轻量化测试播放网页
+├── tv/
+│   ├── favorites.m3u            # ⭐ 精选高可用 M3U 播放列表（首选）
+│   ├── favorites.txt            # ⭐ 精选高可用 TXT 直播源
+│   ├── custom.m3u               # 自定义港澳台频道源
+│   ├── iptv4.m3u                # 全量 400+ 频道播放列表
+│   └── iptv4.txt                # 全量 400+ 频道文本源
+└── README.md                    # 本产品使用说明与项目文档
+```
+
+---
+
+## ⚖️ 免责声明
+- 本项目仅供个人家庭网络测试、学习交流与技术研究使用。
+- 直播源数据均收集自互联网公开流媒体节点，请遵守当地法律法规，严禁用于任何商业牟利用途。
