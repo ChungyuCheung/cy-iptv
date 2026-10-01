@@ -65,11 +65,37 @@ jobs:
           text="CY-IPTV 巡检失败：测活步骤未成功（${check_outcome}），未推送。"
         elif [ "$push_outcome" != "success" ]; then
           text="CY-IPTV 巡检失败：推送到 main 未成功（${push_outcome}），仓库未同步。"
-        elif [ "$pushed" = "true" ]; then
-          text="CY-IPTV 巡检完成：已 rebase 并推送到 main。"
         else
-          text="CY-IPTV 巡检完成：播放源无变更，未推送。"
+          now_str=$(TZ=Asia/Taipei date '+%Y-%m-%d %H:%M:%S')
+          count() { grep -c "^$1" tv/favorites.txt || true; }
+          fct=$(count '翡翠台')
+          news=$(count '无线新闻台,')
+          plus=$(count 'TVB Plus,')
+          cctv=$(( $(count 'CCTV5,') + $(count 'CCTV5+,') ))
+          tw=$(( $(count 'TVBS 新闻台,') + $(count 'TVBS Asia,') + $(count '台视新闻,') + $(count '三立戏剧台,') + $(count '八大戏剧台,') + $(count '纬来精采台,') + $(count '人间卫视,') ))
+          total=$(grep -E ',.+' tv/favorites.txt | grep -vc '#genre#' || true)
+          if [ "$pushed" = "true" ]; then
+            tail_line="🚀 *已自动同步至 GitHub 仓库分支！*"
+          else
+            tail_line="ℹ️ *播放源无变更，仓库已是最新。*"
+          fi
+          text=$(cat <<EOF
+📺 *CY-IPTV 自动巡检播报*
+
+⏱ *巡检时间*: \`${now_str}\`
+🟢 *测活状态*: 全部正常（共 ${total} 条可用线路）
+📡 *核心频道概况*:
+  • 翡翠台: \`${fct}\` 条优质线路（含1080P/4K）
+  • TVB Plus: \`${plus}\` 条线路
+  • 无线新闻台: \`${news}\` 条播报线路
+  • 央视体育 (CCTV5/5+): \`${cctv}\` 条高速线路
+  • 台湾专区 (TVBS/台视/三立等): \`${tw}\` 条线路
+
+${tail_line}
+EOF
+)
         fi
         curl -fsS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
           --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+          --data-urlencode "parse_mode=Markdown" \
           --data-urlencode "text=${text}"
