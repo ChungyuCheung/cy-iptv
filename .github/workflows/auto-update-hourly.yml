@@ -4,7 +4,7 @@ on:
   schedule:
     # 每小时第 15 分钟运行一次（避开全球整点高峰，保障准时推送）
     - cron: '15 * * * *'
-  workflow_dispatch: # 支持在 GitHub 网页端的 Actions 页面随时手动一键触发
+  workflow_dispatch:
 
 jobs:
   check-and-update:
@@ -79,21 +79,20 @@ jobs:
           else
             tail_line="ℹ️ *播放源无变更，仓库已是最新。*"
           fi
-          text=$(cat <<EOF
-📺 *CY-IPTV 自动巡检播报*
-
-⏱ *巡检时间*: \`${now_str}\`
-🟢 *测活状态*: 全部正常（共 ${total} 条可用线路）
-📡 *核心频道概况*:
-  • 翡翠台: \`${fct}\` 条优质线路（含1080P/4K）
-  • TVB Plus: \`${plus}\` 条线路
-  • 无线新闻台: \`${news}\` 条播报线路
-  • 央视体育 (CCTV5/5+): \`${cctv}\` 条高速线路
-  • 台湾专区 (TVBS/台视/三立等): \`${tw}\` 条线路
-
-${tail_line}
-EOF
-)
+          q='`'
+          text=$(printf '%s\n' \
+            "📺 *CY-IPTV 自动巡检播报*" \
+            "" \
+            "⏱ *巡检时间*: ${q}${now_str}${q}" \
+            "🟢 *测活状态*: 全部正常（共 ${total} 条可用线路）" \
+            "📡 *核心频道概况*:" \
+            "  • 翡翠台: ${q}${fct}${q} 条优质线路（含1080P/4K）" \
+            "  • TVB Plus: ${q}${plus}${q} 条线路" \
+            "  • 无线新闻台: ${q}${news}${q} 条播报线路" \
+            "  • 央视体育 (CCTV5/5+): ${q}${cctv}${q} 条高速线路" \
+            "  • 台湾专区 (TVBS/台视/三立等): ${q}${tw}${q} 条线路" \
+            "" \
+            "${tail_line}")
         fi
         curl -fsS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
           --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
