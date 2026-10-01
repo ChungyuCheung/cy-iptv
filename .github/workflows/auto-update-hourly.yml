@@ -24,25 +24,52 @@ jobs:
       with:
         python-version: '3.11'
 
-    - name: 执行直播源测活、测速排序与通知推送
-      env:
-        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+    - name: 执行直播源测活与测速排序
+      id: check
       run: |
         python tools/auto_update.py
 
     - name: 提交并同步推送到 main 与 master 分支
+      id: push
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        
-        # 检查是否有文件更新或时间戳更新
+
         if [ -n "$(git status --porcelain)" ]; then
           git add tv/
           git commit -m "chore(auto): 每小时自动巡检查活并更新直播源 [skip ci]"
+          git pull --rebase origin main
           git push origin HEAD:main
           git push origin HEAD:master || true
-          echo "✅ 播放源已自动更新并推送到远程分支"
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
+          echo "✅ 播放源已 rebase 并推送到远程分支"
         else
-          echo "ℹ️ 所有播放源均正常，无需提交"
+          echo "pushed=false" >> "$GITHUB_OUTPUT"
+          echo "ℹ️ 播放源无变更，无需提交"
         fi
+
+    - name: 按实际结果推送 Telegram 通知
+      if: always()
+      env:
+        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+      run: |
+        if [ -z "${TELEGRAM_BOT_TOKEN}" ] || [ -z "${TELEGRAM_CHAT_ID}" ]; then
+          echo "未配置 Telegram，跳过通知"
+          exit 0
+        fi
+        check_outcome="${{ steps.check.outcome }}"
+        push_outcome="${{ steps.push.outcome }}"
+        pushed="${{ steps.push.outputs.pushed }}"
+        if [ "$check_outcome" != "success" ]; then
+          text="CY-IPTV 巡检失败：测活步骤未成功（${check_outcome}），未推送。"
+        elif [ "$push_outcome" != "success" ]; then
+          text="CY-IPTV 巡检失败：推送到 main 未成功（${push_outcome}），仓库未同步。"
+        elif [ "$pushed" = "true" ]; then
+          text="CY-IPTV 巡检完成：已 rebase 并推送到 main。"
+        else
+          text="CY-IPTV 巡检完成：播放源无变更，未推送。"
+        fi
+        curl -fsS -X POST "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+          --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+          --data-urlencode "text=${text}"
