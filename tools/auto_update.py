@@ -11,14 +11,8 @@ CANDIDATE_POOL = {
         "http://107.150.60.122/live/cctv5hd.m3u8",
         "http://207.56.13.146:81/cdnlive/cctv5.m3u8"
     ],
-    "CCTV5+": [
-        "http://112.30.73.119:9901/tsfile/live/0006_1.m3u8?key=txiptv&playlive=1&authid=0"
-    ],
     "广东体育": [
         "https://epg.pw/stream/7b470f9fc5c305db0c8622117b7b25ca00eb35ba3e93e865cf0ff9df5c736681.m3u8"
-    ],
-    "纬来体育": [
-        "https://epg.pw/stream/8855a9936e37e608a0ec8a014cce1673dee9c5d68d560da376cc92e5edef2b25.m3u8"
     ],
     "翡翠台 1080P": [
         "http://103.172.187.30:12000/stream/mytv/null-1/master.m3u8"
@@ -162,7 +156,7 @@ def update_all_sources():
         print(f"  * {ch_name}: {len(active_urls)} 条可用源")
 
     fav_groups = [
-        ("体育精选", ["CCTV5", "CCTV5+", "广东体育", "纬来体育"]),
+        ("体育精选", ["CCTV5", "广东体育"]),
         ("香港专区", ["翡翠台 1080P", "翡翠台 4K", "翡翠台", "无线新闻台", "TVB Plus", "TVB 星河"]),
         ("台湾专区", ["TVBS 新闻台", "TVBS Asia", "台视新闻", "三立戏剧台", "八大戏剧台", "纬来精采台", "人间卫视"])
     ]
