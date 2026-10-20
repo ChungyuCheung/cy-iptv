@@ -4,6 +4,7 @@ import concurrent.futures
 import time
 import os
 import datetime
+import re
 
 # 候选源池配置（按频道组织候选地址）
 CANDIDATE_POOL = {
@@ -55,9 +56,6 @@ CANDIDATE_POOL = {
     "三立戏剧台": [
         "http://61.221.215.25:8800/hls/41/index.m3u8"
     ],
-    "八大戏剧台": [
-        "http://61.221.215.25:8800/hls/39/index.m3u8"
-    ],
     "纬来精采台": [
         "http://61.221.215.25:8800/hls/48/index.m3u8"
     ],
@@ -90,12 +88,26 @@ def check_stream(url, timeout=3.0):
             if '#EXT-X-STREAM-INF' in text:
                 cur = urllib.parse.urljoin(final, items[0])
                 continue
-            seg = urllib.parse.urljoin(final, items[-1])
-            req = urllib.request.Request(seg, headers=headers)
-            with urllib.request.urlopen(req, timeout=timeout * 2) as sresp:
-                if sresp.status == 200 and len(sresp.read(4096)) > 0:
-                    return True, elapsed
-            return False, 999.0
+            durs = [float(x) for x in re.findall(r'#EXTINF:([\d.]+)', text)]
+            segs = items[-3:]
+            if len(segs) < 2:
+                return False, 999.0
+            durs = durs[-len(segs):] if len(durs) >= len(segs) else [6.0] * len(segs)
+            worst = 0.0
+            for seg_path, dur in zip(segs, durs):
+                seg = urllib.parse.urljoin(final, seg_path)
+                t0 = time.time()
+                req = urllib.request.Request(seg, headers=headers)
+                with urllib.request.urlopen(req, timeout=max(timeout * 2, dur)) as sresp:
+                    if sresp.status != 200 or len(sresp.read()) == 0:
+                        return False, 999.0
+                ratio = (time.time() - t0) / max(dur, 1.0)
+                if ratio >= 1.0:
+                    return False, 999.0
+                worst = max(worst, ratio)
+            # 延迟值改为“分片下载耗时/分片时长”的最差值，越小越流畅
+            return True, worst
+        return False, 999.0
     except Exception:
         pass
     return False, 999.0
@@ -158,7 +170,7 @@ def update_all_sources():
     fav_groups = [
         ("体育精选", ["CCTV5", "广东体育"]),
         ("香港专区", ["翡翠台 1080P", "翡翠台 4K", "翡翠台", "无线新闻台", "TVB Plus", "TVB 星河"]),
-        ("台湾专区", ["TVBS 新闻台", "TVBS Asia", "台视新闻", "三立戏剧台", "八大戏剧台", "纬来精采台", "人间卫视"])
+        ("台湾专区", ["TVBS 新闻台", "TVBS Asia", "台视新闻", "三立戏剧台", "纬来精采台", "人间卫视"])
     ]
 
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -185,7 +197,7 @@ def update_all_sources():
     fct_count = len(active_pool.get('翡翠台 1080P', [])) + len(active_pool.get('翡翠台 4K', [])) + len(active_pool.get('翡翠台', []))
     news_count = len(active_pool.get('无线新闻台', []))
     cctv_count = len(active_pool.get('CCTV5', [])) + len(active_pool.get('CCTV5+', []))
-    tw_count = sum(len(active_pool.get(k, [])) for k in ["TVBS 新闻台", "TVBS Asia", "台视新闻", "三立戏剧台", "八大戏剧台", "纬来精采台", "人间卫视"])
+    tw_count = sum(len(active_pool.get(k, [])) for k in ["TVBS 新闻台", "TVBS Asia", "台视新闻", "三立戏剧台", "纬来精采台", "人间卫视"])
 
     tg_msg = (
         f"📺 *CY-IPTV 自动巡检播报*\n\n"
