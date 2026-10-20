@@ -2,7 +2,6 @@
 CCTV5,https://live.264788.xyz/channel/cctv5?livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
 CCTV5+,https://live.264788.xyz/channel/cctv5plus?livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk
 广东体育,https://epg.pw/stream/7b470f9fc5c305db0c8622117b7b25ca00eb35ba3e93e865cf0ff9df5c736681.m3u8
-广东体育,http://r.jdshipin.com/LiYdg
 纬来体育,https://epg.pw/stream/8855a9936e37e608a0ec8a014cce1673dee9c5d68d560da376cc92e5edef2b25.m3u8
 
 香港专区,#genre#

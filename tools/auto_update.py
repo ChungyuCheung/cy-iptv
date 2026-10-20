@@ -20,7 +20,6 @@ CANDIDATE_POOL = {
         "http://gslbserv.itv.cmvideo.cn/6000000001000015875/1.m3u8?channel-id=wasusyt&Contentid=6000000001000015875&livemode=1&stbId=3"
     ],
     "广东体育": [
-        "http://r.jdshipin.com/LiYdg",
         "https://epg.pw/stream/7b470f9fc5c305db0c8622117b7b25ca00eb35ba3e93e865cf0ff9df5c736681.m3u8"
     ],
     "纬来体育": [
