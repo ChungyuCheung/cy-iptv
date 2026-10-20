@@ -8,16 +8,11 @@ import datetime
 # 候选源池配置（按频道组织候选地址）
 CANDIDATE_POOL = {
     "CCTV5": [
-        "http://112.30.73.119:9901/tsfile/live/0005_2.m3u8?key=txiptv&playlive=0&authid=0",
-        "https://live.264788.xyz/channel/cctv5?livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk",
-        "http://gslbserv.itv.cmvideo.cn/1000000005000025222/1.m3u8?channel-id=ystenlive&Contentid=1000000005000025222&livemode=1&stbId=3",
-        "http://iptv.huuc.edu.cn/hls/cctv5hd.m3u8"
+        "http://107.150.60.122/live/cctv5hd.m3u8",
+        "http://207.56.13.146:81/cdnlive/cctv5.m3u8"
     ],
     "CCTV5+": [
-        "http://112.30.73.119:9901/tsfile/live/0006_1.m3u8?key=txiptv&playlive=1&authid=0",
-        "http://112.30.73.119:9901/tsfile/live/0006_2.m3u8?key=txiptv&playlive=0&authid=0",
-        "https://live.264788.xyz/channel/cctv5plus?livekey=01WgOR41rriMmMkzNsd0UoaxJRwetZdxIvtVk",
-        "http://gslbserv.itv.cmvideo.cn/6000000001000015875/1.m3u8?channel-id=wasusyt&Contentid=6000000001000015875&livemode=1&stbId=3"
+        "http://112.30.73.119:9901/tsfile/live/0006_1.m3u8?key=txiptv&playlive=1&authid=0"
     ],
     "广东体育": [
         "https://epg.pw/stream/7b470f9fc5c305db0c8622117b7b25ca00eb35ba3e93e865cf0ff9df5c736681.m3u8"
@@ -78,20 +73,36 @@ CANDIDATE_POOL = {
 }
 
 def check_stream(url, timeout=3.0):
-    """测试流地址是否可用，并返回 (是否可用, 延迟秒数)"""
+    """测试流地址是否可用：播放列表 200 且能下载到一个非空媒体分片，返回 (是否可用, 延迟秒数)"""
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
     }
     start = time.time()
     try:
-        req = urllib.request.Request(url, headers=headers)
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
+        cur = url
+        for _ in range(3):
+            req = urllib.request.Request(cur, headers=headers)
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                if resp.status != 200:
+                    return False, 999.0
+                final = resp.geturl()
+                text = resp.read(200000).decode('utf-8', errors='ignore')
             elapsed = time.time() - start
-            if resp.status == 200:
-                head = resp.read(200).decode('utf-8', errors='ignore')
-                if '#EXTM3U' in head or resp.headers.get('Content-Type', '').startswith('application/') or resp.headers.get('Content-Type', '').startswith('video/'):
+            if '#EXTM3U' not in text:
+                return False, 999.0
+            items = [l.strip() for l in text.splitlines() if l.strip() and not l.startswith('#')]
+            if not items:
+                return False, 999.0
+            if '#EXT-X-STREAM-INF' in text:
+                cur = urllib.parse.urljoin(final, items[0])
+                continue
+            seg = urllib.parse.urljoin(final, items[-1])
+            req = urllib.request.Request(seg, headers=headers)
+            with urllib.request.urlopen(req, timeout=timeout * 2) as sresp:
+                if sresp.status == 200 and len(sresp.read(4096)) > 0:
                     return True, elapsed
-    except:
+            return False, 999.0
+    except Exception:
         pass
     return False, 999.0
 

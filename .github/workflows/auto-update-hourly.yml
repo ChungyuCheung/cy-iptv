@@ -6,6 +6,10 @@ on:
     - cron: '15 * * * *'
   workflow_dispatch:
 
+concurrency:
+  group: auto-update-main
+  cancel-in-progress: false
+
 jobs:
   check-and-update:
     runs-on: ubuntu-latest
@@ -35,18 +39,41 @@ jobs:
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-        if [ -n "$(git status --porcelain)" ]; then
-          git add tv/
-          git commit -m "chore(auto): 每小时自动巡检查活并更新直播源 [skip ci]"
-          git pull --rebase origin main
-          git push origin HEAD:main
-          git push origin HEAD:master || true
-          echo "pushed=true" >> "$GITHUB_OUTPUT"
-          echo "✅ 播放源已 rebase 并推送到远程分支"
-        else
+        if [ -z "$(git status --porcelain tv/)" ]; then
           echo "pushed=false" >> "$GITHUB_OUTPUT"
           echo "ℹ️ 播放源无变更，无需提交"
+          exit 0
         fi
+
+        git add tv/
+        git commit -m "chore(auto): 每小时自动巡检查活并更新直播源 [skip ci]"
+
+        for attempt in 1 2 3; do
+          git fetch origin main
+          if ! git rebase origin/main; then
+            echo "⚠️ rebase 冲突，丢弃本地生成文件，基于最新 main 重新生成"
+            git rebase --abort || true
+            git reset --hard origin/main
+            python tools/auto_update.py
+            if [ -z "$(git status --porcelain tv/)" ]; then
+              echo "pushed=false" >> "$GITHUB_OUTPUT"
+              echo "ℹ️ 最新 main 已包含相同播放源，无需提交"
+              exit 0
+            fi
+            git add tv/
+            git commit -m "chore(auto): 每小时自动巡检查活并更新直播源 [skip ci]"
+          fi
+          if git push origin HEAD:main; then
+            git push origin HEAD:master || true
+            echo "pushed=true" >> "$GITHUB_OUTPUT"
+            echo "✅ 播放源已 rebase 并推送到远程分支（第 ${attempt} 次尝试）"
+            exit 0
+          fi
+          echo "⚠️ 第 ${attempt} 次推送失败，稍后重试"
+          sleep $((attempt * 5))
+        done
+        echo "❌ 推送 3 次均失败"
+        exit 1
 
     - name: 巡检失败时推送 Telegram 通知
       if: failure()
