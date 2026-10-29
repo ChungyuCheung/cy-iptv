@@ -31,6 +31,7 @@ CANDIDATE_POOL = {
         "http://php.jdshipin.com:8880/TVOD/iptv.php?id=fct4"
     ],
     "无线新闻台": [
+        "https://h5cdn3.kylintv.tv/live/tvbnews_iphone.m3u8",
         "http://r.jdshipin.com/CkuBd",
         "http://php.jdshipin.com:8880/TVOD/iptv.php?id=wxxw",
         "http://cdn9.163189.xyz/smt1.1.php?id=inews_twn"
